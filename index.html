@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mindcast</title>
+<meta name="description" content="Estimate a student mental health score from daily habits and see how your routine compares.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Sora:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="bg" aria-hidden="true"></div>
+
+<nav class="nav">
+  <a class="logo" href="#top"><i></i>Mindcast</a>
+  <div class="links">
+    <a href="#how">How it works</a><a href="#assess">Assessment</a><a href="#results">Results</a>
+  </div>
+  <span class="status" id="status" data-state="checking">Checking API</span>
+</nav>
+
+<header class="hero" id="top">
+  <div class="hero-copy">
+    <p class="pill">AI wellbeing estimate · trained on 5,000 student surveys</p>
+    <h1>See how your daily habits shape your mind.</h1>
+    <p class="lede">Share a typical day. Our model estimates your mental health score and shows which habits sit inside healthy ranges and which deserve attention.</p>
+    <div class="cta"><a class="btn" href="#assess">Start assessment</a><a class="ghost" href="#how">How it works</a></div>
+  </div>
+  <div class="orb" aria-hidden="true">
+    <span class="ring r1"></span><span class="ring r2"></span><span class="ring r3"></span>
+    <div class="orb-core"><b>6.2</b><span>student average</span></div>
+  </div>
+</header>
+
+<section class="how" id="how">
+  <article class="glass"><span class="ic">1</span><h3>Describe your day</h3><p>Sleep, study, activity, social media use and stress, entered with simple sliders.</p></article>
+  <article class="glass"><span class="ic">2</span><h3>Model reads the pattern</h3><p>A random forest compares your answers with patterns in 5,000 student responses.</p></article>
+  <article class="glass"><span class="ic">3</span><h3>Get a clear dashboard</h3><p>A score, habit indicators and a side-by-side comparison with the student average.</p></article>
+</section>
+
+<section class="sec" id="assess">
+  <div class="sec-h"><h2>Your assessment</h2><p>Answer for a typical day. Nothing is stored; answers go only to your API.</p></div>
+  <form class="glass form" id="form" novalidate>
+    <div class="grid2">
+      <fieldset class="f" id="f-age"><legend>Age</legend>
+        <input class="in" type="number" id="age" min="10" max="100" value="21" inputmode="numeric">
+        <p class="note" id="age-note" hidden>The training data covers ages 18 to 24, so estimates outside that range are less reliable.</p></fieldset>
+      <fieldset class="f" id="f-gender"><legend>Gender</legend><div class="seg" id="g-gender"></div><p class="msg" hidden>Choose one to continue.</p></fieldset>
+      <fieldset class="f" id="f-academic"><legend>Academic level</legend><div class="seg" id="g-academic"></div></fieldset>
+      <fieldset class="f" id="f-country"><legend>Country</legend><select class="in" id="country"></select><p class="msg" hidden>Pick a country, or “Another country”.</p></fieldset>
+      <fieldset class="f"><legend>Most used platform</legend><select class="in" id="platform"></select></fieldset>
+      <fieldset class="f"><legend>Main purpose</legend><div class="seg" id="g-purpose"></div></fieldset>
+    </div>
+
+    <h3 class="sub">Daily rhythm</h3>
+    <div class="grid2" id="sliders"></div>
+    <div class="budget" aria-hidden="true"><div class="bar"><i id="b-sleep"></i><i id="b-study"></i><i id="b-move"></i></div>
+      <p id="b-text"></p></div>
+
+    <fieldset class="f"><legend>Stress lately</legend><div class="seg stress" id="g-stress"></div></fieldset>
+
+    <p class="error" id="error" role="alert" hidden></p>
+    <button class="btn wide" type="submit" id="go"><span class="spin"></span><span id="go-label">Generate my estimate</span></button>
+  </form>
+</section>
+
+<section class="sec" id="results">
+  <div class="sec-h"><h2>Your dashboard</h2><p id="res-sub">Complete the assessment to see your score and habit breakdown here.</p></div>
+  <div class="empty glass" id="empty"><div class="ghost-gauge"></div><p>Nothing to show yet.<br><a href="#assess">Start the assessment</a></p></div>
+
+  <div class="dash" id="dash" hidden>
+    <article class="glass card gauge-card">
+      <svg viewBox="0 0 200 200" role="img" aria-label="Score gauge">
+        <defs><linearGradient id="gg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8B7CFF"/><stop offset="1" stop-color="#5EE0D0"/></linearGradient></defs>
+        <circle class="g-track" cx="100" cy="100" r="80" transform="rotate(135 100 100)"/>
+        <circle class="g-fill" id="g-fill" cx="100" cy="100" r="80" transform="rotate(135 100 100)"/>
+      </svg>
+      <div class="g-num"><b id="score">–</b><span>estimated score</span></div>
+      <p class="band" id="band"></p>
+      <p class="g-text" id="res-text"></p>
+      <div class="scale"><i id="s-fill"></i><u id="s-avg"></u></div>
+      <p class="scale-l"><span>3 lower</span><span>average 6.2</span><span>higher 10</span></p>
+      <p class="care" id="care" hidden>If this matches how things feel, it’s worth talking to someone you trust or a campus counsellor.</p>
+    </article>
+
+    <article class="glass card"><h3>Habit indicators</h3><ul class="ind" id="ind"></ul></article>
+    <article class="glass card"><h3>You vs the student average</h3>
+      <div class="cmp" id="cmp"></div>
+      <p class="key"><i class="k-you"></i>You <i class="k-avg"></i>Students</p></article>
+    <article class="glass card wide-card"><h3>What stands out</h3><ul class="ins" id="ins"></ul></article>
+  </div>
+  <p class="foot">Estimates come from a random forest trained on survey data and land within about 0.35 points on held-out data. Indicators use general guidance and dataset averages. This is not a diagnosis.</p>
+</section>
+
+<script src="script.js"></script>
+</body>
+</html>
