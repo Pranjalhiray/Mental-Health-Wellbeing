@@ -1,7 +1,7 @@
 /* Mindcast: front end for the Mental Health Prediction API */
 
 // Change this if your FastAPI server runs somewhere else.
-const API_URL = 'http://127.0.0.1:8000';
+const API_URL = window.location.origin;
 
 // Dataset means from the notebook's df.describe().
 const MEAN = 6.2, SMIN = 3, SMAX = 10;

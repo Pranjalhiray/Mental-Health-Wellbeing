@@ -1,4 +1,6 @@
 import joblib
+from fastapi.responses import FileResponse
+from pathlib import Path
 import pandas as pd
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
@@ -6,8 +8,10 @@ from pydantic import BaseModel, Field
 from typing import Literal
 from fastapi.middleware.cors import CORSMiddleware
 
+BASE_DIR = Path(__file__).resolve().parent
+STATIC_DIR = BASE_DIR / "static"
 
-model = joblib.load('Mental_Health_Model.pkl')
+model = joblib.load(BASE_DIR / "Mental_Health_Model.pkl")
 
 app = FastAPI()
 
@@ -41,10 +45,15 @@ class PredictionResponse(BaseModel):
 
 
 
+app.mount(
+    "/static",
+    StaticFiles(directory=str(STATIC_DIR)),
+    name="static"
+)
 
-@app.get('/')
-def greet():
-    return {"Welcome": "Welcome to the Mental Health Prediction API!"}
+@app.get("/", include_in_schema=False)
+def home():
+    return FileResponse(STATIC_DIR / "index.html")
 
 top_countries = ['Other',
                 'India',
@@ -79,9 +88,3 @@ def predict(data: StudentData):
     prediction = model.predict(input_row)[0]
 
     return PredictionResponse(predicted_mental_health_score=round(float(prediction)))
-
-app.mount("/static", StaticFiles(directory="static"), name="static")
-
-@app.get("/")
-def home():
-    return FileResponse("static/index.html")
